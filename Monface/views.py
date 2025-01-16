@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from Monface.forms import EmployeeProfilForm, LoginForm, StudentProfilForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth import  login as auth_login, logout as auth_logout
 from Monface.models import Person, Student, Employee, Message, FriendRequest
 from django.shortcuts import render, redirect
 from .forms import StudentProfilForm, EmployeeProfilForm
@@ -33,10 +33,10 @@ def register(request):
         employeeForm = EmployeeProfilForm(request.POST)
 
         if user_type == "student" and studentForm.is_valid():
-            studentForm.save()  # Enregistrer les données de l'étudiant
+            studentForm.save()  
             return redirect("/login/")
         elif user_type == "employee" and employeeForm.is_valid():
-            employeeForm.save()  # Enregistrer les données de l'employé
+            employeeForm.save()  
             return redirect("/login/")
         else:
             return render(request, "user_profile.html", {
@@ -54,7 +54,7 @@ def register(request):
 
 def logout(request):
     auth_logout(request)  
-    return redirect('/login')  # Redirection vers la page de connexion
+    return redirect('/login')  
 
 def get_logged_user_from_request(request):
     if 'logged_user_id' in request.session:
@@ -116,17 +116,17 @@ def add_friend(request):
         if ami_id:
             try:
                 friend = Person.objects.get(id=ami_id)
-                logged_user.Amis.add(friend)  # Ajoute l'ami
-                return redirect('/welcome')  # Redirection vers la page d'accueil
+                logged_user.Amis.add(friend)  
+                return redirect('/welcome')  
             except Person.DoesNotExist:
-                return redirect('/welcome')  # L'ami n'existe pas
-    return redirect('/login')  # Si non connecté, redirection vers login
+                return redirect('/welcome')  
+    return redirect('/login')  
 
 def profil(request):
     logged_user = get_logged_user_from_request(request)
     if logged_user:
-        statut_message = ""  # Vous pouvez définir le statut ici si nécessaire
-                # Vérifiez si l'utilisateur est un étudiant
+        statut_message = ""  
+                
         if isinstance(logged_user, Student):
             if logged_user.annee == 1:
                 statut_message = f"Étudiant en 1ère année {logged_user.cursus.titre}"
@@ -156,8 +156,7 @@ def modifier(request):
     if not logged_user:
         return redirect('/login')
 
-    statut_message = ""  # Vous pouvez définir le statut ici si nécessaire
-            # Vérifiez si l'utilisateur est un étudiant
+    statut_message = ""  
     if isinstance(logged_user, Student):
         if logged_user.annee == 1:
                 statut_message = f"Étudiant en 1ère année {logged_user.cursus.titre}"
@@ -168,7 +167,7 @@ def modifier(request):
         else:
                 statut_message = f"Étudiant en {logged_user.annee}ème année {logged_user.cursus.titre}"
 
-        # Vérifiez si l'utilisateur est un employé
+       
     elif isinstance(logged_user, Employee):
             statut_message = f"Employé(e) en tant que {logged_user.job.titre} au campus {logged_user.campus.nom}"
     if isinstance(logged_user, Student):
@@ -185,13 +184,13 @@ def modifier(request):
             form = EmployeeProfilForm(request.POST, instance=logged_user)
 
         if form.is_valid():
-            form.save()  # Save the updated user data
+            form.save() 
             return redirect('/welcome')
 
     return render(request, 'modifier_profile.html', {
         'form': form,
         'logged_user': logged_user,
-        'statut_message': statut_message,  # Passer le statut
+        'statut_message': statut_message,  
     })
 
 def ajouter(request):
@@ -199,8 +198,8 @@ def ajouter(request):
     if not logged_user:
         return redirect('/login')
 
-    statut_message = ""  # Vous pouvez définir le statut ici si nécessaire
-            # Vérifiez si l'utilisateur est un étudiant
+    statut_message = ""  
+           
     if isinstance(logged_user, Student):
         if logged_user.annee == 1:
                 statut_message = f"Étudiant en 1ère année {logged_user.cursus.titre}"
@@ -211,7 +210,7 @@ def ajouter(request):
         else:
                 statut_message = f"Étudiant en {logged_user.annee}ème année {logged_user.cursus.titre}"
 
-        # Vérifiez si l'utilisateur est un employé
+       
     elif isinstance(logged_user, Employee):
             statut_message = f"Employé(e) en tant que {logged_user.job.titre} au campus {logged_user.campus.nom}"
     if request.method == "POST":
@@ -230,7 +229,7 @@ def ajouter(request):
         'logged_user': logged_user,
         'amis': amis,
         'personnes': personnes,
-        'statut_message': statut_message,  # Passer le statut
+        'statut_message': statut_message,  
     })
 
 from django.http import JsonResponse
@@ -241,16 +240,15 @@ def send_friend_request(request):
         to_user_id = request.POST.get("to_user_id")
         try:
             to_user = Person.objects.get(id=to_user_id)
-            # Vérifiez si une demande d'ami existe déjà
+            
             if not FriendRequest.objects.filter(from_user=logged_user, to_user=to_user).exists():
                 FriendRequest.objects.create(from_user=logged_user, to_user=to_user)
-                return redirect('/welcome')  # Redirection après succès
+                return JsonResponse({'success': 'Demande envoyée avec succès.'})
             else:
                 return JsonResponse({'error': 'Demande déjà envoyée.'})
         except Person.DoesNotExist:
             return JsonResponse({'error': 'Utilisateur non trouvé.'})
-    return redirect('/welcome')
-
+    return JsonResponse({'error': 'Requête invalide.'})
 def accept_friend_request(request):
     logged_user = get_logged_user_from_request(request)
     if logged_user and request.method == "POST":

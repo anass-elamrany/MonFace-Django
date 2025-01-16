@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +21,7 @@
         }
 
         .navbar {
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
 
@@ -35,13 +36,13 @@
             color: white;
             padding: 2rem 0;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .profile-image {
             border: 4px solid white;
             border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .btn-custom {
@@ -50,7 +51,7 @@
             border-radius: 20px;
             padding: 0.5rem 1.5rem;
             transition: all 0.3s ease;
-            color : white;
+            color: white;
         }
 
         .btn-custom:hover {
@@ -58,26 +59,29 @@
             color: var(--primary-color);
             transform: translateY(-2px);
         }
-        .add-friend-button{
+
+        .add-friend-button {
             background-color: transparent;
             border: 2px solid #4267B2;
             border-radius: 20px;
             padding: 0.5rem 1.5rem;
             transition: all 0.3s ease;
-            color : #4267B2;
+            color: #4267B2;
         }
-        .add-friend-button:hover{
+
+        .add-friend-button:hover {
             background-color: transparent;
             border: 2px solid white;
             border-radius: 20px;
             padding: 0.5rem 1.5rem;
             transition: all 0.3s ease;
-            color : white;
+            color: white;
         }
+
         .card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
         }
 
@@ -89,7 +93,7 @@
             background-color: white;
             border-radius: 25px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .form-control {
@@ -120,7 +124,7 @@
             background-color: white;
             border-radius: 15px;
             padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .list-group-item {
@@ -161,7 +165,7 @@
             .profile-section {
                 text-align: center;
             }
-            
+
             .profile-section .text-end {
                 text-align: center !important;
                 margin-top: 1rem;
@@ -169,6 +173,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container-fluid px-4">
@@ -198,8 +203,8 @@
                 </div>
                 <div class="col-md-6">
                     <h2 class="mb-0">{{ logged_user.name }} {{ logged_user.prenom }}</h2>
-                    <h2 class="mb-0">{{ statut_message }}</h2>                    
-                </div>                                 
+                    <h2 class="mb-0">{{ statut_message }}</h2>
+                </div>
                 <div class="col-md-4 text-end">
                     <a href="{% url 'profil' %}" class="btn btn-custom me-2">
                         <i class="fas fa-user me-2"></i>Voir le profil
@@ -220,46 +225,46 @@
                     <h4>Amis</h4>
                     <ul class="list-group">
                         {% for ami in amis %}
-                            <li class="list-group-item">
-                                {{ ami.name }} {{ ami.prenom }}
-                            </li>
+                        <li class="list-group-item">
+                            {{ ami.name }} {{ ami.prenom }}
+                        </li>
                         {% empty %}
-                            <p>Aucun ami ajouté.</p>
+                        <p>Aucun ami ajouté.</p>
                         {% endfor %}
                     </ul>
                 </div>
             </div>
-    
+
             <!-- Liste des personnes disponibles -->
             <div class="col-md-6">
                 <div class="friends-section">
                     <h4>Ajouter un ami</h4>
                     <ul class="list-group">
                         {% for personne in personnes %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ personne.name }} {{ personne.prenom }}
-                                <form method="POST" action="{% url 'send_friend_request' %}" class="friend-request-form">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="to_user_id" value="{{ personne.id }}">
-                                    <button type="submit" class="btn add-friend-button">Ajouter comme ami</button>
-                                    <span class="response-message"></span>
-                                </form>
-                            </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ personne.name }} {{ personne.prenom }}
+                            <form method="POST" action="{% url 'send_friend_request' %}" class="friend-request-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="to_user_id" value="{{ personne.id }}">
+                                <button type="submit" class="btn add-friend-button">Ajouter comme ami</button>
+                                <span class="response-message"></span>
+                            </form>
+                        </li>
                         {% empty %}
-                            <p>Aucune personne disponible.</p>
+                        <p>Aucune personne disponible.</p>
                         {% endfor %}
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.querySelectorAll('.friend-request-form').forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();  // Prevent default form submission
-                
+
                 const button = e.target.querySelector('.add-friend-button');
                 const messageSpan = e.target.querySelector('.response-message');
                 const userId = e.target.querySelector('input[name="to_user_id"]').value;
@@ -268,30 +273,25 @@
                 button.disabled = true;
                 button.textContent = "Envoi en cours...";
 
+                // Create a FormData object to send form data
+                const formData = new FormData(e.target);
+
                 try {
                     const response = await fetch(e.target.action, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}',
-                        },
-                        body: JSON.stringify({
-                            to_user_id: userId
-                        }),
+                        body: formData,  // Sending form data
                     });
 
                     const data = await response.json();
 
                     if (response.ok) {
                         button.textContent = 'Demande envoyée';
-                        
+
                     } else {
                         if (data.error === "Demande déjà envoyée.") {
                             button.textContent = 'Déjà envoyé';
-                            
                         } else {
                             button.textContent = 'Réessayer';
-                            
                         }
                     }
                 } catch (error) {
@@ -299,6 +299,8 @@
                 }
             });
         });
+
     </script>
 </body>
+
 </html>
