@@ -1,4 +1,4 @@
-# SocialConnect Django Project
+# MonFace Django Project
 
 Monface is a Django-based web application that manages user profiles, including students and employees, along with a messaging system and other related functionalities. Users can log in, create their profiles, and interact with other users, including managing friendships and sending messages.
 
